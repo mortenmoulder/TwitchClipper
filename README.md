@@ -1,9 +1,9 @@
-# TwitchClipper
+﻿# TwitchClipper
 Download Twitch.tv clips using youtube-dl on any platform that can compile and run .NET 5.0 applications.
 
 Currently only supported on Windows and Linux, as I need to test MacOS (it should compile, but currently I cannot confirm if youtube-dl works or not.
 
-**There is also no error handling what so ever, so if a request fails.. it might just fail. Will have to look into that later. Made this in a couple of hours, so bear with me.**
+**There is also no error handling what so ever, so if a request fails.. it might just fail. Will have to look into that later. Made this in a couple of hours, so bear 🐻 with me.**
 
 ## Configuration
 `appsettings.json` contains all the things you need to change, in order to start using TwitchClipper. 
@@ -67,8 +67,6 @@ git clone https://github.com/mortenmoulder/TwitchClipper.git
 
 cd TwitchClipper
 
-dotnet build
-
 dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime linux-x64 TwitchClipper.sln
 
 cd publish
@@ -88,8 +86,6 @@ git clone https://github.com/mortenmoulder/TwitchClipper.git
 
 cd TwitchClipper
 
-dotnet build
-
 dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime win-x64 TwitchClipper.sln
 
 cd publish
@@ -98,8 +94,8 @@ TwitchClipper.exe -u TWITCH_USERNAME
 ```
 
 ## Few minor things
-This is my first published .NET app. I'm a web developer, so please bear with me.
+This is my first published .NET app. I'm a web developer, so please bear 🐻 with me.
 
-1. If you ever need to get the new version of this, you simply need to do `git pull` followed by `dotnet build` and then the long `dotnet publish .....` command.
+1. If you ever need to get the new version of this, you simply need to do `git pull` followed by the long `dotnet publish .....` command.
 2. Edit appsettings.json BEFORE you run the `dotnet build/publish` commands. The file will automatically get copied to the `publish` folder
 3. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
