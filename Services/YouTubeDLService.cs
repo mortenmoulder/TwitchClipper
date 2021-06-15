@@ -77,9 +77,9 @@ namespace TwitchClipper.Services
             {
                 var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Slug}.mp4");
 
-                if(await _hostService.GetOSPlatform() == OSPlatform.Linux)
+                if(await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
                 {
-                    path = path.Replace("\\\\", "/");
+                    path = path.Replace("\\", "/");
                 }
 
                 Console.WriteLine("Downloading: " + path);
@@ -98,9 +98,9 @@ namespace TwitchClipper.Services
             {
                 var path = Path.Combine(root, "clips", username, date);
 
-                if (await _hostService.GetOSPlatform() == OSPlatform.Linux)
+                if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
                 {
-                    path = path.Replace("\\\\", "/");
+                    path = path.Replace("\\", "/");
                 }
 
                 await _hostService.CreateDirectoryIfNotExists(path);
