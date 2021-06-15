@@ -99,3 +99,11 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 1. If you ever need to get the new version of this, you simply need to do `git pull` followed by the long `dotnet publish .....` command.
 2. Edit appsettings.json BEFORE you run the `dotnet build/publish` commands. The file will automatically get copied to the `publish` folder
 3. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
+
+## TODO:
+1. Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")
+2. Clean up some of the messy "if linux or osx then"-code
+3. Make the -u argument optional, and introduce some kind of flag you can set, that downloads from a list of users in appsettings.json
+4. Error handling (pff works on my machine)
+5. DOCKER CONTAINER
+6. someone please see if it works on osx please
