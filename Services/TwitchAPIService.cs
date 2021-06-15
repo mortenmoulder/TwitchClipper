@@ -33,7 +33,7 @@ namespace TwitchClipper.Services
             {
                 using (var httpClient = new HttpClient())
                 {
-                    var url = string.Format("https://api.twitch.tv/kraken/clips/top?channel={0}&limit={1}&period={2}", username, 10, "all");
+                    var url = string.Format("https://api.twitch.tv/kraken/clips/top?channel={0}&limit={1}&period={2}", username, 100, "all");
 
                     if (!string.IsNullOrWhiteSpace(cursor))
                     {
