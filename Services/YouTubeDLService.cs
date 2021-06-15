@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using TwitchClipper.Helpers;
 using TwitchClipper.Models;
@@ -75,6 +76,11 @@ namespace TwitchClipper.Services
             await ParallelExtensions.ParallelForEachAsync(clips, async clip =>
             {
                 var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Slug}.mp4");
+
+                if(await _hostService.GetOSPlatform() == OSPlatform.Linux)
+                {
+                    path.Replace("\\\\", "/");
+                }
 
                 Console.WriteLine("Downloading: " + path);
 
