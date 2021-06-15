@@ -60,6 +60,12 @@ namespace TwitchClipper.Services
                         if (httpResponse.IsSuccessStatusCode)
                         {
                             await File.WriteAllBytesAsync(await _hostService.GetYouTubeDlExecutablePath(), await httpResponse.Content.ReadAsByteArrayAsync());
+
+                            //set magic executable permission on Linux and OSX.. very ugly
+                            if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
+                            {
+                                await ProcessEx.RunAsync("/bin/bash", $"-c \"chmod +x {await _hostService.GetYouTubeDlExecutablePath()}\"");
+                            }
                         }
                     }
                 }
@@ -77,7 +83,7 @@ namespace TwitchClipper.Services
             {
                 var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Slug}.mp4");
 
-                if(await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
+                if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
                 {
                     path = path.Replace("\\", "/");
                 }
