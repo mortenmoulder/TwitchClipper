@@ -79,7 +79,7 @@ namespace TwitchClipper.Services
 
                 if(await _hostService.GetOSPlatform() == OSPlatform.Linux)
                 {
-                    path.Replace("\\\\", "/");
+                    path = path.Replace("\\\\", "/");
                 }
 
                 Console.WriteLine("Downloading: " + path);
@@ -97,6 +97,12 @@ namespace TwitchClipper.Services
             foreach (var date in dates)
             {
                 var path = Path.Combine(root, "clips", username, date);
+
+                if (await _hostService.GetOSPlatform() == OSPlatform.Linux)
+                {
+                    path = path.Replace("\\\\", "/");
+                }
+
                 await _hostService.CreateDirectoryIfNotExists(path);
             }
 
