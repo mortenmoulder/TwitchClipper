@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace TwitchClipper.Services
@@ -61,7 +58,7 @@ namespace TwitchClipper.Services
 
         public async Task CreateDirectoryIfNotExists(string path)
         {
-            if(!Directory.Exists(path))
+            if (!Directory.Exists(path))
             {
                 await Task.Run(() => Directory.CreateDirectory(path));
             }

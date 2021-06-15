@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TwitchClipper.Services;
+﻿using System.Threading.Tasks;
 using TwitchClipper.Models;
-using System.IO;
+using TwitchClipper.Services;
 
 namespace TwitchClipper
 {
