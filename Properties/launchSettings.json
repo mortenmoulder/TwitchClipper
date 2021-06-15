@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TwitchClipper": {
+      "commandName": "Project",
+      "commandLineArgs": "-u djdecain"
+    }
+  }
+}
