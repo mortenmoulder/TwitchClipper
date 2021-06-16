@@ -80,7 +80,7 @@ namespace TwitchClipper.Services
             {
                 culture = new CultureInfo(locale);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("Is your locale supported? Check https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c and scroll down. This is case sensitive.");
                 Environment.Exit(-1);
