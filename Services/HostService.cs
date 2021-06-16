@@ -1,7 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TwitchClipper.Models;
 
 namespace TwitchClipper.Services
 {
@@ -11,29 +14,30 @@ namespace TwitchClipper.Services
         Task<string> GetYouTubeDlDownloadUrl();
         Task<OSPlatform> GetOSPlatform();
         Task CreateDirectoryIfNotExists(string path);
+        Task<string> ConvertCustomPathExpressionToSavePath(TwitchClipModel model);
     }
 
     public class HostService : IHostService
     {
-        private readonly IConfigurationService _service;
+        private readonly IConfigurationService _configService;
 
-        public HostService(IConfigurationService service)
+        public HostService(IConfigurationService configService)
         {
-            _service = service;
+            _configService = configService;
         }
 
         public async Task<string> GetYouTubeDlExecutablePath()
         {
             var os = await GetOSPlatform();
 
-            return Path.Combine(Directory.GetCurrentDirectory(), await _service.GetConfigurationValue<string>($"YouTubeDL:{os}:FileName"));
+            return Path.Combine(Directory.GetCurrentDirectory(), await _configService.GetConfigurationValue<string>($"YouTubeDL:{os}:FileName"));
         }
 
         public async Task<string> GetYouTubeDlDownloadUrl()
         {
             var os = await GetOSPlatform();
 
-            return await Task.Run(() => _service.GetConfigurationValue<string>($"YouTubeDL:{os}:Download"));
+            return await Task.Run(() => _configService.GetConfigurationValue<string>($"YouTubeDL:{os}:Download"));
         }
 
         public async Task<OSPlatform> GetOSPlatform()
@@ -62,6 +66,71 @@ namespace TwitchClipper.Services
             {
                 await Task.Run(() => Directory.CreateDirectory(path));
             }
+        }
+
+        public async Task<string> ConvertCustomPathExpressionToSavePath(TwitchClipModel model)
+        {
+            var path = await _configService.GetConfigurationValue<string>("Download:SavePathExpression");
+
+            var illegalCharacters = new List<string>();
+
+            if(Regex.Matches(path, "{").Count != Regex.Matches(path, "}").Count)
+            {
+                Console.WriteLine("Seems like there is an unequal amount of { and } (they should be the same amount) in the custom path you wrote");
+                Environment.Exit(-1);
+            }
+
+            if(!path.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+            {
+                Console.WriteLine("Your custom path does not end with .mp4");
+                Environment.Exit(-1);
+            }
+
+            var replace = path
+                .Replace("{id", "{0")
+                .Replace("{broadcaster_name", "{1")
+                .Replace("{broadcaster_id", "{2")
+                .Replace("{game_id", "{3")
+                .Replace("{title", "{4")
+                .Replace("{yyyy", "{5:yyyy").Replace("{yyy", "{5:yyy").Replace("{yy", "{5:yy").Replace("{y", "{5:y")
+                .Replace("{MM", "{5:MM").Replace("{M", "{5:M")
+                .Replace("{dddd", "{5:dddd").Replace("{ddd", "{5:ddd").Replace("{dd", "{5:dd").Replace("{d", "{5:d")
+                .Replace("{HH", "{5:HH").Replace("{H", "{5:H").Replace("{hh", "{5:hh")
+                .Replace("{mm", "{5:mm").Replace("{m", "{5:m")
+                .Replace("{ss", "{5:ss").Replace("{s", "{5:s")
+                .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
+                ;
+
+            path = string.Format(replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Id, model.CreatedAt);
+
+            var platform = await GetOSPlatform();
+
+            if(platform == OSPlatform.Windows)
+            {
+                illegalCharacters = new List<string>()
+                {
+                    "<", ">", ":", "\"", "/", "|", "?", "*", "{", "}"
+                };
+
+                path = path.Replace("/", @"\");
+            }
+
+            if (platform == OSPlatform.Linux || platform == OSPlatform.Linux)
+            {
+                illegalCharacters = new List<string>()
+                {
+                    "{", "}"
+                };
+
+                path = path.Replace("\\", "/");
+            }
+
+            foreach(var character in illegalCharacters)
+            {
+                path = path.Replace(character, "");
+            }
+
+            return path;
         }
     }
 }

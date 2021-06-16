@@ -96,23 +96,16 @@ namespace TwitchClipper.Services
 
         private async Task CreateAllDirectoriesRequired(List<TwitchClipModel> clips)
         {
-            var root = Directory.GetCurrentDirectory();
-            var username = clips.First().BroadcasterName;
-            var dates = clips.Select(x => x.CreatedAt.ToString(@"yyyy\\MM\\dd")).Distinct().ToList();
-
-            foreach (var date in dates)
+            foreach(var clip in clips)
             {
-                var path = Path.Combine(root, "clips", username, date);
+                var savePath = await _hostService.ConvertCustomPathExpressionToSavePath(clip);
+                var path = savePath.Replace(Path.GetFileName(savePath), "");
+                path = path.TrimEnd('\\').TrimEnd('/');
 
-                if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
-                {
-                    path = path.Replace("\\", "/");
-                }
+                path = Path.Combine(Directory.GetCurrentDirectory().TrimEnd('\\').TrimEnd('/'), "clips", path.TrimStart('\\').TrimStart('/'));
 
                 await _hostService.CreateDirectoryIfNotExists(path);
             }
-
-            Console.WriteLine($"A total of {dates.Count()} directories were created or already exists");
         }
     }
 }

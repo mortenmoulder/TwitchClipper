@@ -94,6 +94,63 @@ cd publish
 TwitchClipper.exe -u TWITCH_USERNAME
 ```
 
+## Custom save path
+Since there's nothing I hate more than not being able to pick my own save paths (okay, I am overexaturating a bit), I've decided to make my own custom expressions. You can customize exactly how you want your clips to be saved.
+
+Use your slashes, your A-Z, your 0-9, and so on outside of the curly brackets as much as you want. If you want a folder to be named `awesome`, just write that.
+
+### Example
+If you want your clips to be saved as:
+
+```
+broadcaster/
+├─ year/
+│  ├─ month/
+│  │  ├─ day/
+│  │  │  ├─ clipname.mp4
+```
+
+your expression can look like this:
+
+```
+/{broadcaster_name}/{yyyy}/{MM}/{dd}/{id}.mp4
+```
+
+### Requirements
+1. Your expressions MUST end with .mp4 or .MP4. This is simply a limitation set by me, and it also makes my life a lot easier. Each clip from youtube-dl is saved as .mp4 by default either way, so might as well do that.
+2. A few illegal (operating system dependent) characters have been introduced. As long as you stick to your A-Z, your 0-9, your regular directory and file names.. you should be fine. I'm removing illegal characters anyway, so go ahead and try to break it (and then make a pull request with a fix please)
+3. An equal amount of curly brackets. I use curly brackets for my expressions, so you have to deal with that (also who uses curly brackets in their directory or file names??)
+
+### Expressions and reference table
+#### Clip details
+| Expression       | Value                                | Example value                   |
+|------------------|--------------------------------------|---------------------------------|
+| id               | ID/Slug of the clip                  | TrappedAmericanBoarAMPTropPunch |
+| broadcaster_name | Name of the broadcaster              | Sodapoppin                      |
+| broadcaster_id   | ID of the broadcaster                | 26301881                        |
+| game_id          | ID of the game being played          | 18122                           |
+| title            | Title of the clip                    | OMEGALUL                        |
+
+#### Dates
+| Expression       | Value                                | Example value                   |
+|------------------|--------------------------------------|---------------------------------|
+| yyyy             | Year                                 | 2021                            |
+| MMMM             | Full month name                      | June                            |
+| MMM              | Abbreviated month name               | Jun                             |
+| MM               | Month number with leading zero       | 09                              |
+| M                | Month number without leading zero    | 9                               |
+| dddd             | Full day name                        | Wednesday                       |
+| ddd              | Abbreviated day name                 | Wed                             |
+| dd               | Day number with leading zero         | 05                              |
+| d                | Day number without leading zero      | 5                               |
+| HH               | 24-hour clock hour with leading zero | 08                              |
+| H                | 24-hour clock without leading zero   | 8                               |
+| mm               | Minutes with leading zero            | 02                              |
+| m                | Minutes without leading zero         | 2                               |
+| ss               | Seconds with leading zero            | 03                              |
+| s                | Seconds without leading zero         | 3                               |
+| tt               | AM / PM                              | AM                              | 
+
 ## Few minor things
 This is my first published .NET app. I'm a web developer, so please bear 🐻 with me.
 
@@ -103,7 +160,7 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 4. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
 
 ## TODO:
-1. Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")
+1. ~~Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")~~
 2. Clean up some of the messy "if linux or osx then"-code
 3. Make the -u argument optional, and introduce some kind of flag you can set, that downloads from a list of users in appsettings.json
 4. Error handling (pff works on my machine)
