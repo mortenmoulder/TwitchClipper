@@ -81,12 +81,9 @@ namespace TwitchClipper.Services
 
             await ParallelExtensions.ParallelForEachAsync(clips, async clip =>
             {
-                var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Id}.mp4");
+                var path = await _hostService.ConvertCustomPathExpressionToSavePath(clip);
 
-                if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
-                {
-                    path = path.Replace("\\", "/");
-                }
+                path = Path.Combine(Directory.GetCurrentDirectory().TrimEnd('\\').TrimEnd('/'), "clips", path.TrimStart('\\').TrimStart('/'));
 
                 Console.WriteLine("Downloading: " + path);
 
