@@ -13,13 +13,14 @@ There's a section called `TwitchConfiguration` you need to modify:
 ```
 "TwitchConfiguration": {
   "ClientID": "CLIENT_ID_GOES_HERE",
+  "ClientSecret": "CLIENT_SECRET_GOES_HERE",
   "DownloadThreads": 5
 }
 ```
 
 1. Go to https://dev.twitch.tv/console and create your app
-2. Go to your app and find the Client ID
-3. Replace `CLIENT_ID_GOES_HERE` with your newly copied Client ID
+2. Go to your app and find the Client ID and generate a new secret
+3. Replace `CLIENT_ID_GOES_HERE` and `CLIENT_SECRET_GOES_HERE` with your newly copied values
 
 `DownloadThreads` spawns x amount of youtube-dl instances. The higher the number, the faster your download will be. I do not recommend going over 10, as you might get throttled by Twitch.
 
@@ -98,7 +99,8 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 
 1. If you ever need to get the new version of this, you simply need to do `git pull` followed by the long `dotnet publish .....` command.
 2. Edit appsettings.json BEFORE you run the `dotnet build/publish` commands. The file will automatically get copied to the `publish` folder
-3. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
+3. When the authentication token has been generated, it will be stored in the new appsettings.json file in the publish folder (which will be overwritten next time you build)
+4. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
 
 ## TODO:
 1. Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")
@@ -109,3 +111,4 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 6. someone please see if it works on osx please
 7. Check if file exists before overwriting it (waste of time)
 8. Somehow allow the user to determine how many videos they want (filtering, basically). Not everyone wants every video
+9. ~~Refactor to Helix API instead of Kraken, which apparently was newer~~

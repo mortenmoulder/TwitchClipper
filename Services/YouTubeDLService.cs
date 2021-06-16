@@ -77,11 +77,11 @@ namespace TwitchClipper.Services
             await CreateAllDirectoriesRequired(clips);
 
             var root = Directory.GetCurrentDirectory();
-            var username = clips.First().Broadcaster.Name;
+            var username = clips.First().BroadcasterName;
 
             await ParallelExtensions.ParallelForEachAsync(clips, async clip =>
             {
-                var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Slug}.mp4");
+                var path = Path.Combine(root, "clips", username, clip.CreatedAt.ToString(@"yyyy\\MM\\dd"), $"{clip.Id}.mp4");
 
                 if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
                 {
@@ -97,7 +97,7 @@ namespace TwitchClipper.Services
         private async Task CreateAllDirectoriesRequired(List<TwitchClipModel> clips)
         {
             var root = Directory.GetCurrentDirectory();
-            var username = clips.First().Broadcaster.Name;
+            var username = clips.First().BroadcasterName;
             var dates = clips.Select(x => x.CreatedAt.ToString(@"yyyy\\MM\\dd")).Distinct().ToList();
 
             foreach (var date in dates)

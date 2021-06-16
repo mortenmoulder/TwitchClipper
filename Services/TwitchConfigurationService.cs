@@ -6,6 +6,7 @@ namespace TwitchClipper.Services
     {
         Task<string> GetClientID();
         Task<string> GetClientSecret();
+        Task<string> GetAuthToken();
         Task<int> GetDownloadThreads();
     }
 
@@ -20,6 +21,7 @@ namespace TwitchClipper.Services
 
         public async Task<string> GetClientID() => await _service.GetConfigurationValue<string>("TwitchConfiguration:ClientID");
         public async Task<string> GetClientSecret() => await _service.GetConfigurationValue<string>("TwitchConfiguration:ClientSecret");
+        public async Task<string> GetAuthToken() => await _service.GetConfigurationValue<string>("TwitchConfiguration:AuthToken");
         public async Task<int> GetDownloadThreads() => await _service.GetConfigurationValue<int>("TwitchConfiguration:DownloadThreads");
     }
 }
