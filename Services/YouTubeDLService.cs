@@ -87,7 +87,7 @@ namespace TwitchClipper.Services
 
                 Console.WriteLine("Downloading: " + path);
 
-                var processResults = await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o {path}");
+                var processResults = await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o \"{path}\"");
             }, await _twitchConfigurationService.GetDownloadThreads());
         }
 

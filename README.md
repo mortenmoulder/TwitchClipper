@@ -99,7 +99,7 @@ Since there's nothing I hate more than not being able to pick my own save paths 
 
 Use your slashes, your A-Z, your 0-9, and so on outside of the curly brackets as much as you want. If you want a folder to be named `awesome`, just write that.
 
-To make your own expression, edit the `appsettings.json` and find the Download -> SavePathExpression.
+To make your own expression, edit the `appsettings.json` and find the `Download -> SavePathExpression`.
 
 ### Example
 If you want your clips to be saved as:
@@ -117,6 +117,8 @@ your expression can look like this:
 ```
 /{broadcaster_name}/{yyyy}/{MM}/{dd}/{id}.mp4
 ```
+
+If you wish to use another language/locale/culture for your months and days, you can specify that in `Download -> Locale` inside `appsettings.json`. Default is en-US. Find a list of languages here: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c (scroll down)
 
 ### Requirements
 1. Your expressions MUST end with .mp4 or .MP4. This is simply a limitation set by me, and it also makes my life a lot easier. Each clip from youtube-dl is saved as .mp4 by default either way, so might as well do that.
