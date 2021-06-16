@@ -106,12 +106,12 @@ namespace TwitchClipper.Services
                 .Replace("{broadcaster_id", "{2")
                 .Replace("{game_id", "{3")
                 .Replace("{title", "{4")
-                .Replace("{yyyy", "{5:yyyy").Replace("{yyy", "{5:yyy").Replace("{yy", "{5:yy").Replace("{y", "{5:y")
-                .Replace("{MMMM", "{5:MMMM").Replace("{MMM", "{5:MMM").Replace("{MM", "{5:MM").Replace("{M", "{5:M")
-                .Replace("{dddd", "{5:dddd").Replace("{ddd", "{5:ddd").Replace("{dd", "{5:dd").Replace("{d", "{5:d")
-                .Replace("{HH", "{5:HH").Replace("{H", "{5:H").Replace("{hh", "{5:hh")
-                .Replace("{mm", "{5:mm").Replace("{m", "{5:m")
-                .Replace("{ss", "{5:ss").Replace("{s", "{5:s")
+                .Replace("{yyyy", "{5:yyyy").Replace("{yyy", "{5:yyy").Replace("{yy", "{5:yy").Replace("{y", "{5:%y")
+                .Replace("{MMMM", "{5:MMMM").Replace("{MMM", "{5:MMM").Replace("{MM", "{5:MM").Replace("{M", "{5:%M")
+                .Replace("{dddd", "{5:dddd").Replace("{ddd", "{5:ddd").Replace("{dd", "{5:dd").Replace("{d", "{5:%d")
+                .Replace("{HH", "{5:HH").Replace("{H", "{5:%H").Replace("{hh", "{5:hh")
+                .Replace("{mm", "{5:mm").Replace("{m", "{5:%m")
+                .Replace("{ss", "{5:ss").Replace("{s", "{5:%s")
                 .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
                 ;
 
