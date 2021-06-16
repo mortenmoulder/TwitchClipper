@@ -85,15 +85,21 @@ namespace TwitchClipper.Services
 
                 path = Path.Combine(Directory.GetCurrentDirectory().TrimEnd('\\').TrimEnd('/'), "clips", path.TrimStart('\\').TrimStart('/'));
 
-                Console.WriteLine("Downloading: " + path);
+                if (!File.Exists(path))
+                {
+                    Console.WriteLine("Downloading: " + path);
 
-                var processResults = await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o \"{path}\"");
+                    await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o \"{path}\"");
+                } else
+                {
+                    Console.WriteLine("Skipping existing file " + path);
+                }
             }, await _twitchConfigurationService.GetDownloadThreads());
         }
 
         private async Task CreateAllDirectoriesRequired(List<TwitchClipModel> clips)
         {
-            foreach(var clip in clips)
+            foreach (var clip in clips)
             {
                 var savePath = await _hostService.ConvertCustomPathExpressionToSavePath(clip);
                 var path = savePath.Replace(Path.GetFileName(savePath), "");
