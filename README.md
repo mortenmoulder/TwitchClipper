@@ -99,6 +99,8 @@ Since there's nothing I hate more than not being able to pick my own save paths 
 
 Use your slashes, your A-Z, your 0-9, and so on outside of the curly brackets as much as you want. If you want a folder to be named `awesome`, just write that.
 
+To make your own expression, edit the `appsettings.json` and find the Download -> SavePathExpression.
+
 ### Example
 If you want your clips to be saved as:
 
