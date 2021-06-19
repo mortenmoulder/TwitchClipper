@@ -8,6 +8,9 @@
 		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PublishTrimmed>true</PublishTrimmed>
 		<PublishReadyToRun>true</PublishReadyToRun>
+		<Authors>mortenmoulder</Authors>
+		<PackageProjectUrl>https://github.com/mortenmoulder/TwitchClipper</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/mortenmoulder/TwitchClipper</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -1,10 +1,20 @@
 ﻿# TwitchClipper
-Download Twitch.tv clips using youtube-dl on any platform that can compile and run .NET 5.0 applications.
+TwitchClipper is a .NET 5.0 cross platform compatible application, made to download https://twitch.tv clips. Downloading is done via [youtube-dl](https://yt-dl.org/), which will automatically be downloaded and saved in the project's folder.
 
-**There is also no error handling what so ever, so if a request fails.. it might just fail. Will have to look into that later. Made this in a couple of hours, so bear 🐻 with me.**
+Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki) to find some documentation on various topics.
+
+## Features
+* [Custom save path expressions](https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions)
+  * Allows you to save a clip in the exact location you want AND [in your own language](https://github.com/mortenmoulder/TwitchClipper/wiki/Language-support)
+* Save ALL clips (no limit)
+  * Many clip downloaders out there, can only download about 1000 clips before being throttled by Twitch. TwitchClipper has bypassed that limitation!
+* Skip download if a file with the same name exists
+
+## Installation
+Head over to the Wiki to find the installation steps (IT'S REALLY EASY): https://github.com/mortenmoulder/TwitchClipper/wiki/Installation
 
 ## Configuration
-`appsettings.json` contains all the things you need to change, in order to start using TwitchClipper. 
+`appsettings.json` contains all the things you need to change, in order to start using TwitchClipper.
 
 There's a section called `TwitchConfiguration` you need to modify:
 
@@ -22,149 +32,14 @@ There's a section called `TwitchConfiguration` you need to modify:
 
 `DownloadThreads` spawns x amount of youtube-dl instances. The higher the number, the faster your download will be. I do not recommend going over 10, as you might get throttled by Twitch.
 
-## Installation
-### Debian 9
-Found this tutorial on Microsoft's website: https://docs.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-9-
-```
-wget -O - https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
-sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
-wget https://packages.microsoft.com/config/debian/9/prod.list
-sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-sudo chown root:root /etc/apt/trusted.gpg.d/microsoft.asc.gpg
-sudo chown root:root /etc/apt/sources.list.d/microsoft-prod.list
-
-sudo apt-get update; \
-  sudo apt-get install -y apt-transport-https && \
-  sudo apt-get update && \
-  sudo apt-get install -y dotnet-sdk-5.0
-  
-git clone https://github.com/mortenmoulder/TwitchClipper.git
-
-cd TwitchClipper
-
-dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime linux-x64 TwitchClipper.sln
-
-cd publish
-
-./TwitchClipper -u TWITCH_USERNAME
-```
-
-### Debian 10
-Found this tutorial on Microsoft's website: https://docs.microsoft.com/en-us/dotnet/core/install/linux-debian#debian-10-
-```
-wget https://packages.microsoft.com/config/debian/10/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-sudo dpkg -i packages-microsoft-prod.deb
-
-sudo apt-get update; \
-  sudo apt-get install -y apt-transport-https && \
-  sudo apt-get update && \
-  sudo apt-get install -y dotnet-sdk-5.0
-  
-git clone https://github.com/mortenmoulder/TwitchClipper.git
-
-cd TwitchClipper
-
-dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime linux-x64 TwitchClipper.sln
-
-cd publish
-
-./TwitchClipper -u TWITCH_USERNAME
-```
-
-### Windows
-1. Download this file and place it somewhere: https://dot.net/v1/dotnet-install.ps1
-2. Open PowerShell and run these commands:
+Optionally you can also modify the `Download` section, if you want to customize where your clips are saved:
 
 ```
-cd to\folder\that\contains\dotnet-install.ps1
-dotnet-install.ps1 -Channel 5.0 -Runtime aspnetcore
-
-git clone https://github.com/mortenmoulder/TwitchClipper.git
-
-cd TwitchClipper
-
-dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime win-x64 TwitchClipper.sln
-
-cd publish
-
-TwitchClipper.exe -u TWITCH_USERNAME
+"Download": {
+  "SavePathExpression": "/{broadcaster_name}/{yyyy}-{MM}-{dd}/{id}.mp4",
+  "Locale": "en-US"
+}
 ```
-
-### MacOS
-Grab the latest Dotnet SDK for .NET 5.0 and install it: https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.301-macos-x64-installer
-
-```
-git clone https://github.com/mortenmoulder/TwitchClipper.git
-
-cd TwitchClipper
-
-dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime osx-x64 TwitchClipper.sln
-
-cd publish
-
-./TwitchClipper -u TWITCH_USERNAME
-```
-
-## Custom save path
-Since there's nothing I hate more than not being able to pick my own save paths (okay, I am overexaturating a bit), I've decided to make my own custom expressions. You can customize exactly how you want your clips to be saved.
-
-Use your slashes, your A-Z, your 0-9, and so on outside of the curly brackets as much as you want. If you want a folder to be named `awesome`, just write that.
-
-To make your own expression, edit the `appsettings.json` and find the `Download -> SavePathExpression`.
-
-### Example
-If you want your clips to be saved as:
-
-```
-broadcaster/
-├─ year/
-│  ├─ month/
-│  │  ├─ day/
-│  │  │  ├─ clipname.mp4
-```
-
-your expression can look like this:
-
-```
-/{broadcaster_name}/{yyyy}/{MM}/{dd}/{id}.mp4
-```
-
-If you wish to use another language/locale/culture for your months and days, you can specify that in `Download -> Locale` inside `appsettings.json`. Default is en-US. Find a list of languages here: https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c (scroll down)
-
-### Requirements
-1. Your expressions MUST end with .mp4 or .MP4. This is simply a limitation set by me, and it also makes my life a lot easier. Each clip from youtube-dl is saved as .mp4 by default either way, so might as well do that.
-2. A few illegal (operating system dependent) characters have been introduced. As long as you stick to your A-Z, your 0-9, your regular directory and file names.. you should be fine. I'm removing illegal characters anyway, so go ahead and try to break it (and then make a pull request with a fix please)
-3. An equal amount of curly brackets. I use curly brackets for my expressions, so you have to deal with that (also who uses curly brackets in their directory or file names??)
-
-### Expressions and reference table
-#### Clip details
-| Expression       | Value                                | Example value                   |
-|------------------|--------------------------------------|---------------------------------|
-| id               | ID/Slug of the clip                  | TrappedAmericanBoarAMPTropPunch |
-| broadcaster_name | Name of the broadcaster              | Sodapoppin                      |
-| broadcaster_id   | ID of the broadcaster                | 26301881                        |
-| game_id          | ID of the game being played          | 18122                           |
-| title            | Title of the clip                    | OMEGALUL                        |
-
-#### Dates
-| Expression       | Value                                | Example value                   |
-|------------------|--------------------------------------|---------------------------------|
-| yyyy             | Year                                 | 2021                            |
-| MMMM             | Full month name                      | June                            |
-| MMM              | Abbreviated month name               | Jun                             |
-| MM               | Month number with leading zero       | 09                              |
-| M                | Month number without leading zero    | 9                               |
-| dddd             | Full day name                        | Wednesday                       |
-| ddd              | Abbreviated day name                 | Wed                             |
-| dd               | Day number with leading zero         | 05                              |
-| d                | Day number without leading zero      | 5                               |
-| HH               | 24-hour clock hour with leading zero | 08                              |
-| H                | 24-hour clock without leading zero   | 8                               |
-| mm               | Minutes with leading zero            | 02                              |
-| m                | Minutes without leading zero         | 2                               |
-| ss               | Seconds with leading zero            | 03                              |
-| s                | Seconds without leading zero         | 3                               |
-| tt               | AM / PM                              | AM                              | 
 
 ## Few minor things
 This is my first published .NET app. I'm a web developer, so please bear 🐻 with me.
@@ -183,3 +58,4 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 7. ~~Check if file exists before overwriting it (waste of time)~~
 8. Somehow allow the user to determine how many videos they want (filtering, basically). Not everyone wants every video
 9. ~~Refactor to Helix API instead of Kraken, which apparently was newer~~
+10. Make releases!
