@@ -18,7 +18,7 @@ Head over to the Wiki to find the installation steps (IT'S REALLY EASY): https:/
 
 There's a section called `TwitchConfiguration` you need to modify:
 
-```
+```json
 "TwitchConfiguration": {
   "ClientID": "CLIENT_ID_GOES_HERE",
   "ClientSecret": "CLIENT_SECRET_GOES_HERE",
@@ -34,7 +34,7 @@ There's a section called `TwitchConfiguration` you need to modify:
 
 Optionally you can also modify the `Download` section, if you want to customize where your clips are saved:
 
-```
+```json
 "Download": {
   "SavePathExpression": "/{broadcaster_name}/{yyyy}-{MM}-{dd}/{id}.mp4",
   "Locale": "en-US"
