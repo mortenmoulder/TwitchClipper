@@ -1,8 +1,6 @@
 ﻿# TwitchClipper
 Download Twitch.tv clips using youtube-dl on any platform that can compile and run .NET 5.0 applications.
 
-Currently only supported on Windows and Linux, as I need to test MacOS (it should compile, but currently I cannot confirm if youtube-dl works or not.
-
 **There is also no error handling what so ever, so if a request fails.. it might just fail. Will have to look into that later. Made this in a couple of hours, so bear 🐻 with me.**
 
 ## Configuration
@@ -43,8 +41,6 @@ sudo apt-get update; \
 git clone https://github.com/mortenmoulder/TwitchClipper.git
 
 cd TwitchClipper
-
-dotnet build
 
 dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime linux-x64 TwitchClipper.sln
 
@@ -92,6 +88,21 @@ dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleF
 cd publish
 
 TwitchClipper.exe -u TWITCH_USERNAME
+```
+
+### MacOS
+Grab the latest Dotnet SDK for .NET 5.0 and install it: https://dotnet.microsoft.com/download/dotnet/thank-you/sdk-5.0.301-macos-x64-installer
+
+```
+git clone https://github.com/mortenmoulder/TwitchClipper.git
+
+cd TwitchClipper
+
+dotnet publish -c Release -o publish -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -p:IncludeNativeLibrariesForSelfExtract=true --runtime osx-x64 TwitchClipper.sln
+
+cd publish
+
+./TwitchClipper -u TWITCH_USERNAME
 ```
 
 ## Custom save path
@@ -161,7 +172,6 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 1. If you ever need to get the new version of this, you simply need to do `git pull` followed by the long `dotnet publish .....` command.
 2. Edit appsettings.json BEFORE you run the `dotnet build/publish` commands. The file will automatically get copied to the `publish` folder
 3. When the authentication token has been generated, it will be stored in the new appsettings.json file in the publish folder (which will be overwritten next time you build)
-4. I added MacOS support, even though it downloads the youtube-dl executable for Linux. Someone please let me know if it works or not.
 
 ## TODO:
 1. ~~Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")~~
@@ -169,7 +179,7 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 3. Make the -u argument optional, and introduce some kind of flag you can set, that downloads from a list of users in appsettings.json
 4. Error handling (pff works on my machine)
 5. DOCKER CONTAINER
-6. someone please see if it works on osx please
+6. ~~someone please see if it works on osx please~~ THANK YOU @mauran
 7. ~~Check if file exists before overwriting it (waste of time)~~
 8. Somehow allow the user to determine how many videos they want (filtering, basically). Not everyone wants every video
 9. ~~Refactor to Helix API instead of Kraken, which apparently was newer~~
