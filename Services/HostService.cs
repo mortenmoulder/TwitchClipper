@@ -5,6 +5,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using TwitchClipper.Helpers;
 using TwitchClipper.Models;
 
 namespace TwitchClipper.Services
@@ -82,22 +83,19 @@ namespace TwitchClipper.Services
             }
             catch (Exception)
             {
-                Console.WriteLine("Is your locale supported? Check https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c and scroll down. This is case sensitive.");
-                Environment.Exit(-1);
+                await ErrorHelper.LogAndExit("Is your locale supported? Check https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lcid/a9eac961-e77d-41a6-90a5-ce1a8b0cdb9c and scroll down. This is case sensitive.");
             }
 
             var illegalCharacters = new List<string>();
 
             if (Regex.Matches(path, "{").Count != Regex.Matches(path, "}").Count)
             {
-                Console.WriteLine("Seems like there is an unequal amount of { and } (they should be the same amount) in the custom path you wrote");
-                Environment.Exit(-1);
+                await ErrorHelper.LogAndExit("Seems like there is an unequal amount of { and } (they should be the same amount) in the custom path you wrote. Check https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions#requirements");
             }
 
             if (!path.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
             {
-                Console.WriteLine("Your custom path does not end with .mp4");
-                Environment.Exit(-1);
+                await ErrorHelper.LogAndExit("Your custom path does not end with .mp4. Check https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions#requirements");
             }
 
             var replace = path

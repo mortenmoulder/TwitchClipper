@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Nito.AsyncEx;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -23,6 +24,7 @@ namespace TwitchClipper.Services
     {
         private readonly IConfigurationService _configService;
         private readonly ITwitchConfigurationService _twitchConfigService;
+        private static object _sync = new object();
 
         public TwitchAPIService(IConfigurationService service, ITwitchConfigurationService twitchConfigService)
         {
@@ -45,8 +47,7 @@ namespace TwitchClipper.Services
 
                 if (!json.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Is your ClientID and ClientSecret correct? Could not auth");
-                    Environment.Exit(-1);
+                    await ErrorHelper.LogAndExit("Is your ClientID and ClientSecret correct? Could not auth.");
                 }
 
                 var jsonResponse = await json.Content.ReadAsStringAsync();
@@ -56,7 +57,7 @@ namespace TwitchClipper.Services
                 //set auth token in appsettings.json
                 await _configService.SetConfigurationValue("TwitchConfiguration:AuthToken", model.AccessToken);
 
-                Console.WriteLine("Grabbed new auth token and placed it in appsettings.json");
+                await LogHelper.Log("Grabbed new auth token and placed it in appsettings.json");
 
                 return model.AccessToken;
             }
@@ -65,6 +66,7 @@ namespace TwitchClipper.Services
         public async Task<string> GetBroadcasterId(string username)
         {
             await EnsureAuthTokenSet();
+            await LogHelper.Log("Grabbing the broadcaster's ID.");
 
             using (var httpClient = new HttpClient())
             {
@@ -81,6 +83,11 @@ namespace TwitchClipper.Services
 
                 var model = JsonConvert.DeserializeObject<TwitchUserResponseModel>(json);
 
+                if (!model.Data.Any())
+                {
+                    await ErrorHelper.LogAndExit($"No data was found for username {username}. Are you sure they exist?");
+                }
+
                 return model.Data.Single().Id;
             }
         }
@@ -89,11 +96,23 @@ namespace TwitchClipper.Services
         {
             await EnsureAuthTokenSet();
             var clips = new List<TwitchClipModel>();
+            var asyncLock = new AsyncLock();
+            var page = 1;
+            var hasRunFirst = false;
 
             var dates = await GetTwitchWeeks();
 
+            await LogHelper.Log($"Scraping Twitch for clips. A total of {dates.Count} requests must be sent!");
+
             await ParallelExtensions.ParallelForEachAsync(dates, async date =>
             {
+                if(hasRunFirst == false)
+                {
+                    LogHelper.Index += 1;
+                }
+
+                hasRunFirst = true;
+
                 using (var httpClient = new HttpClient())
                 {
                     var url = string.Format("https://api.twitch.tv/helix/clips?broadcaster_id={0}&first={1}&started_at={2}", userId, 100, date);
@@ -107,9 +126,13 @@ namespace TwitchClipper.Services
 
                     clips.AddRange(model.Data);
 
-                    Console.WriteLine($"Found {model.Data.Count()} clips. Total: {clips.Count()}");
+                    page++;
+
+                    await LogHelper.Log($"Clips found: {clips.Count} - Page {page}/{dates.Count}", asyncLock);
                 }
             }, 10);
+
+            LogHelper.Index += 1;
 
             return clips;
         }

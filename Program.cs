@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using TwitchClipper.Helpers;
 using TwitchClipper.Models;
 using TwitchClipper.Services;
 
@@ -34,11 +35,18 @@ namespace TwitchClipper
                 Parser.Default.ParseArguments<Options>(args).WithParsed(o =>
                 {
                     options = o;
+                }).WithNotParsed(errors =>
+                {
+                    Environment.Exit(-1);
                 });
+
+                Console.Clear();
+
+                await LogHelper.Log($"Downloading clips made by {options.Username}");
 
                 await serviceProvider.GetService<Application>().Run(options);
 
-                Console.WriteLine("Shutting down...");
+                await LogHelper.Log("Done!");
             }
             catch (Exception ex)
             {

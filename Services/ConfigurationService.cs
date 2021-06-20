@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using TwitchClipper.Helpers;
 
 namespace TwitchClipper.Services
 {
@@ -55,7 +56,7 @@ namespace TwitchClipper.Services
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error writing app settings | {0}", ex.Message);
+                await LogHelper.Log($"Error writing app settings | {ex.Message}");
             }
         }
 
