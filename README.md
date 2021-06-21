@@ -1,4 +1,10 @@
-﻿# TwitchClipper
+# TwitchClipper
+<div align="center">
+ <img src="https://i.imgur.com/kZbRVEz.gif" />
+</div>
+
+<hr>
+
 TwitchClipper is a .NET 5.0 cross platform compatible application, made to download https://twitch.tv clips. Downloading is done via [youtube-dl](https://yt-dl.org/), which will automatically be downloaded and saved in the project's folder.
 
 ```
@@ -23,7 +29,7 @@ Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki) to 
 * [Filtering](https://github.com/mortenmoulder/TwitchClipper/wiki/Command-line-arguments) with date ranges
 
 ## Installation
-Head over to the Wiki to find the installation steps (IT'S REALLY EASY): https://github.com/mortenmoulder/TwitchClipper/wiki/Installation
+Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki/Installation) to find the installation steps or [download a release](https://github.com/mortenmoulder/TwitchClipper/releases) for Windows, Linux, or MacOS.
 
 ## Configuration
 `appsettings.json` contains all the things you need to change, in order to start using TwitchClipper.
