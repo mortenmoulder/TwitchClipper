@@ -142,6 +142,11 @@ namespace TwitchClipper.Services
                 path = path.Replace(character, "");
             }
 
+            var fileName = Path.GetFileName(path);
+            var newFileName = Regex.Replace(path, @"[^\d\w æøåÆØÅ]g", "");
+
+            path = path.Replace(fileName, newFileName);
+
             return path;
         }
     }
