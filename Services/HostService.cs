@@ -98,7 +98,7 @@ namespace TwitchClipper.Services
                 await ErrorHelper.LogAndExit("Your custom path does not end with .mp4. Check https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions#requirements");
             }
 
-            var title = model.Title?.Replace(@"\", "").Replace(@"/", "").Replace(":", "");
+            var title = model.Title?.Replace(@"\", "").Replace(@"/", "").Replace(":", "").Replace("-", "");
 
             var replace = path
                 .Replace("{id", "{0")
