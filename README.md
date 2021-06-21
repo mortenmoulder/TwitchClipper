@@ -62,12 +62,12 @@ This is my first published .NET app. I'm a web developer, so please bear 🐻 wi
 
 ## TODO:
 1. ~~Custom input on how you want the folder structure to be. Currently it's USERNAME\YEAR\MONTH\DAY\CLIP_TITLE (aka "slug")~~
-2. Clean up some of the messy "if linux or osx then"-code
+2. ~~Clean up some of the messy "if linux or osx then"-code~~
 3. Make the -u argument optional, and introduce some kind of flag you can set, that downloads from a list of users in appsettings.json
 4. Error handling (pff works on my machine)
 5. DOCKER CONTAINER
 6. ~~someone please see if it works on osx please~~ THANK YOU @mauran
 7. ~~Check if file exists before overwriting it (waste of time)~~
-8. Somehow allow the user to determine how many videos they want (filtering, basically). Not everyone wants every video
+8. ~~Somehow allow the user to determine how many videos they want (filtering, basically). Not everyone wants every video~~ (more suggestions except dates?)
 9. ~~Refactor to Helix API instead of Kraken, which apparently was newer~~
-10. Make releases!
+10. ~~Make releases!~~

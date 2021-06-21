@@ -61,7 +61,7 @@ namespace TwitchClipper.Services
                             await File.WriteAllBytesAsync(await _hostService.GetYouTubeDlExecutablePath(), await httpResponse.Content.ReadAsByteArrayAsync());
 
                             //set magic executable permission on Linux and OSX.. very ugly
-                            if (await _hostService.GetOSPlatform() == OSPlatform.Linux || await _hostService.GetOSPlatform() == OSPlatform.OSX)
+                            if (!(await _hostService.GetOSPlatform() == OSPlatform.Windows))
                             {
                                 await ProcessEx.RunAsync("/bin/bash", $"-c \"chmod +x {await _hostService.GetYouTubeDlExecutablePath()}\"");
                             }
@@ -102,6 +102,8 @@ namespace TwitchClipper.Services
 
         private async Task CreateAllDirectoriesRequired(List<TwitchClipModel> clips)
         {
+            await LogHelper.Log("Creating directories. This might take a while.");
+
             foreach (var clip in clips)
             {
                 var savePath = await _hostService.ConvertCustomPathExpressionToSavePath(clip);

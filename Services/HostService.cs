@@ -115,9 +115,7 @@ namespace TwitchClipper.Services
 
             path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt);
 
-            var platform = await GetOSPlatform();
-
-            if (platform == OSPlatform.Windows)
+            if (await GetOSPlatform() == OSPlatform.Windows)
             {
                 illegalCharacters = new List<string>()
                 {
@@ -126,15 +124,14 @@ namespace TwitchClipper.Services
 
                 path = path.Replace("/", @"\");
             }
-
-            if (platform == OSPlatform.Linux || platform == OSPlatform.Linux)
+            else
             {
                 illegalCharacters = new List<string>()
                 {
                     "{", "}"
                 };
 
-                path = path.Replace("\\", "/");
+                path = path.Replace(@"\", "/");
             }
 
             foreach (var character in illegalCharacters)
