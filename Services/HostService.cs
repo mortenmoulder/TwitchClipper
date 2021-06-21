@@ -98,6 +98,8 @@ namespace TwitchClipper.Services
                 await ErrorHelper.LogAndExit("Your custom path does not end with .mp4. Check https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions#requirements");
             }
 
+            var title = model.Title.Replace(@"\", "").Replace(@"/", "").Replace(":", "");
+
             var replace = path
                 .Replace("{id", "{0")
                 .Replace("{broadcaster_name", "{1")
@@ -113,7 +115,7 @@ namespace TwitchClipper.Services
                 .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
                 ;
 
-            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt);
+            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, title, model.CreatedAt);
 
             var platform = await GetOSPlatform();
 
@@ -143,7 +145,7 @@ namespace TwitchClipper.Services
             }
 
             var fileName = Path.GetFileName(path);
-            var newFileName = Regex.Replace(fileName, @"[^\d\w æøåÆØÅ.-:]", "");
+            var newFileName = Regex.Replace(fileName, @"[^\d\w æøåÆØÅ.\-:]", "");
 
             path = path.Replace(fileName, newFileName);
 
