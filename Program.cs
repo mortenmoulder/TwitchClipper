@@ -90,6 +90,16 @@ namespace TwitchClipper
                 await ErrorHelper.LogAndExit("To date must be after from date");
             }
 
+            if(dateTo > DateTime.Today)
+            {
+                await ErrorHelper.LogAndExit("To date cannot be in the future");
+            }
+
+            if(dateFrom < new DateTime(2016, 05, 26))
+            {
+                await ErrorHelper.LogAndExit("Date from cannot be before 2016-05-26 because that's when Twitch announced clips");
+            }
+
             filter.DateFrom = dateFrom;
             filter.DateTo = dateTo;
 

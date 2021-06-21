@@ -1,6 +1,17 @@
 ﻿# TwitchClipper
 TwitchClipper is a .NET 5.0 cross platform compatible application, made to download https://twitch.tv clips. Downloading is done via [youtube-dl](https://yt-dl.org/), which will automatically be downloaded and saved in the project's folder.
 
+```
+$ ./twitchclipper --username Asmongold --from 2021-05-01 --to 2021-06-01
+
+Downloading clips made by Asmongold
+Grabbing the broadcaster's ID.
+Scraping Twitch for clips. A total of 5 requests must be sent!
+
+Clips found: 416 - Page 5/5
+Found a total of 416 clips and 0 already exists. Downloading 416 clips.
+```
+
 Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki) to find some documentation on various topics.
 
 ## Features
@@ -9,6 +20,7 @@ Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki) to 
 * Save ALL clips (no limit)
   * Many clip downloaders out there, can only download about 1000 clips before being throttled by Twitch. TwitchClipper has bypassed that limitation!
 * Skip download if a file with the same name exists
+* [Filtering](https://github.com/mortenmoulder/TwitchClipper/wiki/Command-line-arguments) with date ranges
 
 ## Installation
 Head over to the Wiki to find the installation steps (IT'S REALLY EASY): https://github.com/mortenmoulder/TwitchClipper/wiki/Installation
