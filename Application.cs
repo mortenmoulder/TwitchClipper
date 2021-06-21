@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
+using TwitchClipper.Helpers;
 using TwitchClipper.Models;
 using TwitchClipper.Services;
 
@@ -32,6 +34,11 @@ namespace TwitchClipper
             var userId = await _twitchService.GetBroadcasterId(options.Username);
 
             var clips = await _twitchService.GetClips(userId);
+
+            if(!clips.Any())
+            {
+                await ErrorHelper.LogAndExit("No clips found in the given period.");
+            }
 
             await _youtubeDlService.DownloadClips(clips);
         }
