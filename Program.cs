@@ -37,12 +37,12 @@ namespace TwitchClipper
 
                 var result = await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async o =>
                 {
-                    options = o;
+                    await Task.Run(() => options = o);
                 });
 
                 await result.WithNotParsedAsync(async errors =>
                 {
-                    Environment.Exit(-1);
+                    await Task.Run(() => Environment.Exit(-1));
                 });
 
                 if (!string.IsNullOrWhiteSpace(options.DateFrom) || !string.IsNullOrWhiteSpace(options.DateTo))
@@ -85,17 +85,17 @@ namespace TwitchClipper
                 await ErrorHelper.LogAndExit($"Unable to parse {o.DateTo} to a date. You must specify the dates as yyyy-MM-dd (e.g. 2021-05-15");
             }
 
-            if(dateTo <= dateFrom)
+            if (dateTo <= dateFrom)
             {
                 await ErrorHelper.LogAndExit("To date must be after from date");
             }
 
-            if(dateTo > DateTime.Today)
+            if (dateTo > DateTime.Today)
             {
                 await ErrorHelper.LogAndExit("To date cannot be in the future");
             }
 
-            if(dateFrom < new DateTime(2016, 05, 26))
+            if (dateFrom < new DateTime(2016, 05, 26))
             {
                 await ErrorHelper.LogAndExit("Date from cannot be before 2016-05-26 because that's when Twitch announced clips");
             }

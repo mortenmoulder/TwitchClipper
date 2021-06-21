@@ -93,7 +93,7 @@ namespace TwitchClipper.Services
                 {
                     counter++;
                     await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o \"{path}\"");
-                    await LogHelper.Log($"Downloading clip {counter}/{nonExistingClips.Count} using {await _twitchConfigurationService.GetDownloadThreads()} download threads", asyncLock);
+                    await LogHelper.Log($"Downloading clip {counter}/{nonExistingClips.Count} using {await _twitchConfigurationService.GetDownloadThreads()} download threads. {path}", asyncLock);
                 }
             }, await _twitchConfigurationService.GetDownloadThreads());
 
