@@ -143,7 +143,7 @@ namespace TwitchClipper.Services
             }
 
             var fileName = Path.GetFileName(path);
-            var newFileName = Regex.Replace(path, @"[^\d\w æøåÆØÅ.]g", "");
+            var newFileName = Regex.Replace(path, @"[^\d\w æøåÆØÅ.]", "");
 
             path = path.Replace(fileName, newFileName);
 
