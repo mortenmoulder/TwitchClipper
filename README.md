@@ -27,9 +27,17 @@ Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki) to 
   * Many clip downloaders out there, can only download about 1000 clips before being throttled by Twitch. TwitchClipper has bypassed that limitation!
 * Skip download if a file with the same name exists
 * [Filtering](https://github.com/mortenmoulder/TwitchClipper/wiki/Command-line-arguments) with date ranges
+* Auto update (checks for a new release on GitHub)
 
 ## Installation
 Head over to [the Wiki](https://github.com/mortenmoulder/TwitchClipper/wiki/Installation) to find the installation steps or [download a release](https://github.com/mortenmoulder/TwitchClipper/releases) for Windows, Linux, or MacOS.
+
+## Auto update
+To update TwitchClipper to the newest version, simply run TwitchClipper as you normally would, and hit `y` when it prompts you to update. If you don't want to update, simply hit `n` or wait 10 seconds. Alternatively, you can run `./TwitchClipper --update` and it will automatically update.
+
+You need to run the command you just ran afterwards again. I am replacing the executable file with the newest update, so when you run the new command again, it will run on the new version.
+
+If you run TwitchClipper in a service or somehow automatically (like every hour), you can modify your existing command, by adding `--update` to it. If there is no update, it will simply skip and continue, otherwise it will download the update and install it.
 
 ## Configuration
 `appsettings.json` contains all the things you need to change, in order to start using TwitchClipper.
