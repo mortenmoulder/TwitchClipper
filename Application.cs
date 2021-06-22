@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using TwitchClipper.GitHub_Updater;
 using TwitchClipper.Helpers;
 using TwitchClipper.Models;
 using TwitchClipper.Services;
@@ -11,19 +12,26 @@ namespace TwitchClipper
     {
         private readonly ITwitchAPIService _twitchService;
         private readonly IYouTubeDLService _youtubeDlService;
-        private readonly IConfigurationService _configService;
         private readonly IHostService _hostService;
+        private readonly IGitHubUpdater _updater;
 
-        public Application(ITwitchAPIService twitchService, IYouTubeDLService youtubeDlService, IConfigurationService configService, IHostService hostService)
+        public Application(ITwitchAPIService twitchService, IYouTubeDLService youtubeDlService, IHostService hostService, IGitHubUpdater updater)
         {
             _twitchService = twitchService;
             _youtubeDlService = youtubeDlService;
-            _configService = configService;
             _hostService = hostService;
+            _updater = updater;
         }
 
         public async Task Run(Options options)
         {
+            await _updater.CheckForUpdate(options.Update);
+
+            if(string.IsNullOrWhiteSpace(options.Username))
+            {
+                await ErrorHelper.LogAndExit("Seems like you're missing the --username argument");
+            }
+
             //yes, placing this here is really bad. Please don't blame me
             await TestCustomPathExpression();
 

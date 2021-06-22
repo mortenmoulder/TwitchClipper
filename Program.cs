@@ -7,6 +7,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
+using TwitchClipper.GitHub_Updater;
 using TwitchClipper.Helpers;
 using TwitchClipper.Models;
 using TwitchClipper.Services;
@@ -37,12 +38,12 @@ namespace TwitchClipper
 
                 var result = await Parser.Default.ParseArguments<Options>(args).WithParsedAsync(async o =>
                 {
-                    options = o;
+                    await Task.Run(() => options = o);
                 });
 
                 await result.WithNotParsedAsync(async errors =>
                 {
-                    Environment.Exit(-1);
+                    await Task.Run(() => Environment.Exit(-1));
                 });
 
                 if (!string.IsNullOrWhiteSpace(options.DateFrom) || !string.IsNullOrWhiteSpace(options.DateTo))
@@ -128,6 +129,7 @@ namespace TwitchClipper
             services.AddTransient<IYouTubeDLService, YouTubeDLService>();
             services.AddScoped<IHostService, HostService>();
             services.AddSingleton<IFilteringService, FilteringService>();
+            services.AddTransient<IGitHubUpdater, GitHubUpdater>();
 
             return services;
         }
