@@ -40,7 +40,12 @@ You need to run the command you just ran afterwards again. I am replacing the ex
 If you run TwitchClipper in a service or somehow automatically (like every hour), you can modify your existing command, by adding `--update` to it. If there is no update, it will simply skip and continue, otherwise it will download the update and install it.
 
 ## Configuration
-`appsettings.json` contains all the things you need to change, in order to start using TwitchClipper.
+First, you need to create an app on Twitch:
+
+1. Go to https://dev.twitch.tv/console and create your app using [these settings](https://i.imgur.com/NeOdHXu.png) (or something similar)
+2. Go to [your app page](https://dev.twitch.tv/console/apps), find your application, and hit "Manage" 
+3. Find the Client ID and generate a new secret
+4. Open `appsettings.json`
 
 There's a section called `TwitchConfiguration` you need to modify:
 
@@ -52,9 +57,7 @@ There's a section called `TwitchConfiguration` you need to modify:
 }
 ```
 
-1. Go to https://dev.twitch.tv/console and create your app
-2. Go to your app and find the Client ID and generate a new secret
-3. Replace `CLIENT_ID_GOES_HERE` and `CLIENT_SECRET_GOES_HERE` with your newly copied values
+Replace `CLIENT_ID_GOES_HERE` and `CLIENT_SECRET_GOES_HERE` with your newly found values.
 
 `DownloadThreads` spawns x amount of youtube-dl instances. The higher the number, the faster your download will be. I do not recommend going over 10, as you might get throttled by Twitch.
 
