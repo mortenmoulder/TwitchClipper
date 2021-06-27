@@ -14,17 +14,20 @@ namespace TwitchClipper
         private readonly IYouTubeDLService _youtubeDlService;
         private readonly IHostService _hostService;
         private readonly IGitHubUpdater _updater;
+        private readonly IArchivingService _archivingService;
 
-        public Application(ITwitchAPIService twitchService, IYouTubeDLService youtubeDlService, IHostService hostService, IGitHubUpdater updater)
+        public Application(ITwitchAPIService twitchService, IYouTubeDLService youtubeDlService, IHostService hostService, IGitHubUpdater updater, IArchivingService archivingService)
         {
             _twitchService = twitchService;
             _youtubeDlService = youtubeDlService;
             _hostService = hostService;
             _updater = updater;
+            _archivingService = archivingService;
         }
 
         public async Task Run(Options options)
         {
+            await _archivingService.LoadLogs();
             await _updater.CheckForUpdate(options.Update);
 
             if(string.IsNullOrWhiteSpace(options.Username))

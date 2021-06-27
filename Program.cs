@@ -130,6 +130,7 @@ namespace TwitchClipper
             services.AddScoped<IHostService, HostService>();
             services.AddSingleton<IFilteringService, FilteringService>();
             services.AddTransient<IGitHubUpdater, GitHubUpdater>();
+            services.AddSingleton<IArchivingService, ArchivingService>();
 
             return services;
         }

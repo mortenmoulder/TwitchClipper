@@ -22,11 +22,13 @@ namespace TwitchClipper.Services
     {
         private readonly IHostService _hostService;
         private readonly ITwitchConfigurationService _twitchConfigurationService;
+        private readonly IArchivingService _archivingService;
 
-        public YouTubeDLService(IHostService hostService, ITwitchConfigurationService twitchConfigurationService)
+        public YouTubeDLService(IHostService hostService, ITwitchConfigurationService twitchConfigurationService, IArchivingService archivingService)
         {
             _hostService = hostService;
             _twitchConfigurationService = twitchConfigurationService;
+            _archivingService = archivingService;
         }
 
         public async Task CheckYouTubeDLExists()
@@ -88,6 +90,7 @@ namespace TwitchClipper.Services
             await ParallelExtensions.ParallelForEachAsync(clips, async clip =>
             {
                 var path = await GetPath(clip);
+                await _archivingService.Log(clip, path, asyncLock);
 
                 if (!File.Exists(path))
                 {
