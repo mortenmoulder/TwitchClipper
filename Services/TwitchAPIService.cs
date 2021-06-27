@@ -147,7 +147,8 @@ namespace TwitchClipper.Services
 
             //when twitch launched clips
             var periodStart = new DateTime(2016, 05, 26);
-            var periodEnd = DateTime.Today;
+            //tomorrow
+            var periodEnd = DateTime.Today.AddDays(1);
 
             var filtering = await _filteringService.GetFiltering();
             if (filtering != null)
