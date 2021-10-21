@@ -111,9 +111,10 @@ namespace TwitchClipper.Services
                 .Replace("{mm", "{5:mm").Replace("{m", "{5:%m")
                 .Replace("{ss", "{5:ss").Replace("{s", "{5:%s")
                 .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
+                .Replace("{viewcount", "{6")
                 ;
 
-            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt);
+            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt, model.ViewCount);
 
             if (await GetOSPlatform() == OSPlatform.Windows)
             {

@@ -11,7 +11,7 @@
 		<Authors>mortenmoulder</Authors>
 		<PackageProjectUrl>https://github.com/mortenmoulder/TwitchClipper</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/mortenmoulder/TwitchClipper</RepositoryUrl>
-		<Version>1.0.5</Version>
+		<Version>1.0.6</Version>
 	</PropertyGroup>
 
 	<ItemGroup>
