@@ -42,6 +42,9 @@ namespace TwitchClipper
 
             await _twitchService.EnsureAuthTokenSet();
 
+            //seems like writing to the file, then reading from it immediately after introduces some problems.. so here's a fix
+            await Task.Delay(1000);
+
             var userId = await _twitchService.GetBroadcasterId(options.Username);
 
             var clips = await _twitchService.GetClips(userId);

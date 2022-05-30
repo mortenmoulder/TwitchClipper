@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using TwitchClipper.Helpers;
@@ -25,7 +24,6 @@ namespace TwitchClipper.Services
         private readonly IConfigurationService _configService;
         private readonly ITwitchConfigurationService _twitchConfigService;
         private readonly IFilteringService _filteringService;
-        private static object _sync = new object();
 
         public TwitchAPIService(IConfigurationService service, ITwitchConfigurationService twitchConfigService, IFilteringService filteringService)
         {
@@ -67,7 +65,6 @@ namespace TwitchClipper.Services
 
         public async Task<string> GetBroadcasterId(string username)
         {
-            await EnsureAuthTokenSet();
             await LogHelper.Log("Grabbing the broadcaster's ID.");
 
             using (var httpClient = new HttpClient())
@@ -96,7 +93,6 @@ namespace TwitchClipper.Services
 
         public async Task<List<TwitchClipModel>> GetClips(string userId)
         {
-            await EnsureAuthTokenSet();
             var clips = new List<TwitchClipModel>();
             var asyncLock = new AsyncLock();
             var page = 0;
@@ -108,35 +104,74 @@ namespace TwitchClipper.Services
 
             await ParallelExtensions.ParallelForEachAsync(dates, async date =>
             {
-                if(hasRunFirst == false)
+                if (hasRunFirst == false)
                 {
                     LogHelper.Index += 1;
                 }
 
                 hasRunFirst = true;
 
-                using (var httpClient = new HttpClient())
-                {
-                    var url = string.Format("https://api.twitch.tv/helix/clips?broadcaster_id={0}&first={1}&started_at={2}&ended_at={3}", userId, 100, date.Key, date.Value);
+                using var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Add("Client-ID", await _twitchConfigService.GetClientID());
+                httpClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", await _twitchConfigService.GetAuthToken()));
 
-                    httpClient.DefaultRequestHeaders.Add("Client-ID", await _twitchConfigService.GetClientID());
-                    httpClient.DefaultRequestHeaders.Add("Authorization", string.Format("Bearer {0}", await _twitchConfigService.GetAuthToken()));
+                var newClips = await SendRequest(userId, date, httpClient);
 
-                    var json = await httpClient.GetStringAsync(url);
+                clips.AddRange(newClips);
 
-                    var model = JsonConvert.DeserializeObject<TwitchClipResponseModel>(json);
+                await LogHelper.Log($"Clips found: {clips.Count} - Page {page}/{dates.Count}", asyncLock);
 
-                    clips.AddRange(model.Data);
-
-                    page++;
-
-                    await LogHelper.Log($"Clips found: {clips.Count} - Page {page}/{dates.Count}", asyncLock);
-                }
+                page++;
             }, dates.Count >= 10 ? 10 : dates.Count);
 
             LogHelper.Index += 1;
 
             return clips;
+        }
+
+        /// <summary>
+        /// tried to implement some stupid retry logic.. holy shit this is bad
+        /// </summary>
+        private async Task<List<TwitchClipModel>> SendRequest(string userId, KeyValuePair<string, string> date, HttpClient httpClient)
+        {
+            var url = string.Format("https://api.twitch.tv/helix/clips?broadcaster_id={0}&first={1}&started_at={2}&ended_at={3}", userId, 100, date.Key, date.Value);
+
+            var retries = 0;
+
+            var json = string.Empty;
+
+            bool success;
+            HttpResponseMessage result = null;
+
+            do
+            {
+                try
+                {
+                    result = httpClient.GetAsync(url).Result;
+                }
+                catch (Exception ex)
+                {
+                    await Task.Delay(5000);
+                }
+
+                success = result?.IsSuccessStatusCode ?? false;
+
+                if (success)
+                {
+                    json = await result.Content.ReadAsStringAsync();
+                }
+
+                retries++;
+
+                if (retries == 10)
+                {
+                    throw new Exception($"Tried to send request {retries} times but failed. Exiting");
+                }
+            } while (!success);
+
+            var model = JsonConvert.DeserializeObject<TwitchClipResponseModel>(json);
+
+            return model.Data;
         }
 
         //Dictionary<from, to>
@@ -171,7 +206,7 @@ namespace TwitchClipper.Services
                 var from = date;
                 var to = date.AddDays(7);
 
-                if(from.AddDays(7) > periodEnd)
+                if (from.AddDays(7) > periodEnd)
                 {
                     to = periodEnd;
                 }
