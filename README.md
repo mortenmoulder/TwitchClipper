@@ -5,7 +5,7 @@
 
 <hr>
 
-TwitchClipper is a .NET 5.0 cross platform compatible application, made to download https://twitch.tv clips. Downloading is done via [youtube-dl](https://yt-dl.org/), which will automatically be downloaded and saved in the project's folder.
+TwitchClipper is a .NET 5.0 cross platform compatible application, made to download https://twitch.tv clips. Downloading is done via [yt-dlp](https://github.com/yt-dlp/yt-dlp), which will automatically be downloaded and saved in the project's folder.
 
 ```
 $ ./twitchclipper --username Asmongold --from 2021-05-01 --to 2021-06-01
@@ -59,7 +59,7 @@ There's a section called `TwitchConfiguration` you need to modify:
 
 Replace `CLIENT_ID_GOES_HERE` and `CLIENT_SECRET_GOES_HERE` with your newly found values.
 
-`DownloadThreads` spawns x amount of youtube-dl instances. The higher the number, the faster your download will be. I do not recommend going over 10, as you might get throttled by Twitch.
+`DownloadThreads` spawns x amount of yt-dlp instances. The higher the number, the faster your download will be. I do not recommend going over 10, as you might get throttled by Twitch.
 
 Optionally you can also modify the `Download` section, if you want to customize where your clips are saved:
 

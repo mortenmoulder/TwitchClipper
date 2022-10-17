@@ -12,8 +12,8 @@ namespace TwitchClipper.Services
 {
     public interface IHostService
     {
-        Task<string> GetYouTubeDlExecutablePath();
-        Task<string> GetYouTubeDlDownloadUrl();
+        Task<string> GetDownloaderExecutablePath();
+        Task<string> GetDownloaderDownloadUrl();
         Task<OSPlatform> GetOSPlatform();
         Task CreateDirectoryIfNotExists(string path);
         Task<string> ConvertCustomPathExpressionToSavePath(TwitchClipModel model);
@@ -28,18 +28,18 @@ namespace TwitchClipper.Services
             _configService = configService;
         }
 
-        public async Task<string> GetYouTubeDlExecutablePath()
+        public async Task<string> GetDownloaderExecutablePath()
         {
             var os = await GetOSPlatform();
 
-            return Path.Combine(Directory.GetCurrentDirectory(), await _configService.GetConfigurationValue<string>($"YouTubeDL:{os}:FileName"));
+            return Path.Combine(Directory.GetCurrentDirectory(), await _configService.GetConfigurationValue<string>($"Downloader:{os}:FileName"));
         }
 
-        public async Task<string> GetYouTubeDlDownloadUrl()
+        public async Task<string> GetDownloaderDownloadUrl()
         {
             var os = await GetOSPlatform();
 
-            return await Task.Run(() => _configService.GetConfigurationValue<string>($"YouTubeDL:{os}:Download"));
+            return await Task.Run(() => _configService.GetConfigurationValue<string>($"Downloader:{os}:Download"));
         }
 
         public async Task<OSPlatform> GetOSPlatform()

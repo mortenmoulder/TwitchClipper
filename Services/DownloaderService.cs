@@ -12,33 +12,33 @@ using TwitchClipper.Models;
 
 namespace TwitchClipper.Services
 {
-    public interface IYouTubeDLService
+    public interface IDownloaderService
     {
-        Task CheckYouTubeDLExists();
+        Task CheckExecutableExists();
         Task DownloadClips(List<TwitchClipModel> clips);
     }
 
-    public class YouTubeDLService : IYouTubeDLService
+    public class DownloaderService : IDownloaderService
     {
         private readonly IHostService _hostService;
         private readonly ITwitchConfigurationService _twitchConfigurationService;
         private readonly IArchivingService _archivingService;
 
-        public YouTubeDLService(IHostService hostService, ITwitchConfigurationService twitchConfigurationService, IArchivingService archivingService)
+        public DownloaderService(IHostService hostService, ITwitchConfigurationService twitchConfigurationService, IArchivingService archivingService)
         {
             _hostService = hostService;
             _twitchConfigurationService = twitchConfigurationService;
             _archivingService = archivingService;
         }
 
-        public async Task CheckYouTubeDLExists()
+        public async Task CheckExecutableExists()
         {
-            if (!File.Exists(await _hostService.GetYouTubeDlExecutablePath()))
+            if (!File.Exists(await _hostService.GetDownloaderExecutablePath()))
             {
                 ConsoleKey response;
                 do
                 {
-                    await LogHelper.Log("Seems like youtube-dl has not been found. Would you like me to download it for you? [y/n]");
+                    await LogHelper.Log("Seems like yt-dlp has not been found. Would you like me to download it for you? [y/n]");
                     response = Console.ReadKey(false).Key;
 
                     if (response != ConsoleKey.Enter)
@@ -49,23 +49,23 @@ namespace TwitchClipper.Services
 
                 if (response == ConsoleKey.N)
                 {
-                    await ErrorHelper.LogAndExit("You decided not to download youtube-dl, therefore the application must exit. youtube-dl is a requirement.");
+                    await ErrorHelper.LogAndExit("You decided not to download yt-dlp, therefore the application must exit. yt-dlp is a requirement.");
                 }
                 else if (response == ConsoleKey.Y)
                 {
                     await LogHelper.Log("Download starting");
 
                     using (var httpClient = new HttpClient())
-                    using (var httpResponse = await httpClient.GetAsync(await _hostService.GetYouTubeDlDownloadUrl()))
+                    using (var httpResponse = await httpClient.GetAsync(await _hostService.GetDownloaderDownloadUrl()))
                     {
                         if (httpResponse.IsSuccessStatusCode)
                         {
-                            await File.WriteAllBytesAsync(await _hostService.GetYouTubeDlExecutablePath(), await httpResponse.Content.ReadAsByteArrayAsync());
+                            await File.WriteAllBytesAsync(await _hostService.GetDownloaderExecutablePath(), await httpResponse.Content.ReadAsByteArrayAsync());
 
                             //set magic executable permission on Linux and OSX.. very ugly
                             if (!(await _hostService.GetOSPlatform() == OSPlatform.Windows))
                             {
-                                await ProcessEx.RunAsync("/bin/bash", $"-c \"chmod +x {await _hostService.GetYouTubeDlExecutablePath()}\"");
+                                await ProcessEx.RunAsync("/bin/bash", $"-c \"chmod +x {await _hostService.GetDownloaderExecutablePath()}\"");
                             }
                         }
                     }
@@ -95,7 +95,7 @@ namespace TwitchClipper.Services
                 if (!File.Exists(path))
                 {
                     counter++;
-                    await ProcessEx.RunAsync(await _hostService.GetYouTubeDlExecutablePath(), $"{clip.Url} -o \"{path}\"");
+                    await ProcessEx.RunAsync(await _hostService.GetDownloaderExecutablePath(), $"{clip.Url} -o \"{path}\"");
                     await LogHelper.Log($"Downloading clip {counter}/{nonExistingClips.Count} using {await _twitchConfigurationService.GetDownloadThreads()} download threads", asyncLock);
                 }
             }, await _twitchConfigurationService.GetDownloadThreads());

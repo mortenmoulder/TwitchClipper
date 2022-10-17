@@ -11,15 +11,15 @@ namespace TwitchClipper
     public class Application
     {
         private readonly ITwitchAPIService _twitchService;
-        private readonly IYouTubeDLService _youtubeDlService;
+        private readonly IDownloaderService _downloaderService;
         private readonly IHostService _hostService;
         private readonly IGitHubUpdater _updater;
         private readonly IArchivingService _archivingService;
 
-        public Application(ITwitchAPIService twitchService, IYouTubeDLService youtubeDlService, IHostService hostService, IGitHubUpdater updater, IArchivingService archivingService)
+        public Application(ITwitchAPIService twitchService, IDownloaderService downloaderService, IHostService hostService, IGitHubUpdater updater, IArchivingService archivingService)
         {
             _twitchService = twitchService;
-            _youtubeDlService = youtubeDlService;
+            _downloaderService = downloaderService;
             _hostService = hostService;
             _updater = updater;
             _archivingService = archivingService;
@@ -38,7 +38,7 @@ namespace TwitchClipper
             //yes, placing this here is really bad. Please don't blame me
             await TestCustomPathExpression();
 
-            await _youtubeDlService.CheckYouTubeDLExists();
+            await _downloaderService.CheckExecutableExists();
 
             await _twitchService.EnsureAuthTokenSet();
 
@@ -54,7 +54,7 @@ namespace TwitchClipper
                 await ErrorHelper.LogAndExit("No clips found in the given period.");
             }
 
-            await _youtubeDlService.DownloadClips(clips);
+            await _downloaderService.DownloadClips(clips);
         }
 
         private async Task TestCustomPathExpression()

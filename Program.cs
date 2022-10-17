@@ -126,7 +126,7 @@ namespace TwitchClipper
             services.AddTransient<ITwitchAPIService, TwitchAPIService>();
             services.AddScoped<IConfigurationService, ConfigurationService>();
             services.AddScoped<ITwitchConfigurationService, TwitchConfigurationService>();
-            services.AddTransient<IYouTubeDLService, YouTubeDLService>();
+            services.AddTransient<IDownloaderService, DownloaderService>();
             services.AddScoped<IHostService, HostService>();
             services.AddSingleton<IFilteringService, FilteringService>();
             services.AddTransient<IGitHubUpdater, GitHubUpdater>();
