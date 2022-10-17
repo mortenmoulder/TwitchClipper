@@ -35,23 +35,40 @@ namespace TwitchClipper.Services
         {
             if (!File.Exists(await _hostService.GetDownloaderExecutablePath()))
             {
-                ConsoleKey response;
-                do
+                var response = true;
+                var countdown = 10;
+
+                while (countdown > 0)
                 {
-                    await LogHelper.Log("Seems like yt-dlp has not been found. Would you like me to download it for you? [y/n]");
-                    response = Console.ReadKey(false).Key;
+                    Console.SetCursorPosition(0, 0);
+                    Console.Write($"Seems like yt-dlp has not been found. Would you like me to download it for you? [y/n] ({countdown}s until auto accept) ");
 
-                    if (response != ConsoleKey.Enter)
+                    if (Console.KeyAvailable)
                     {
-                        await LogHelper.Log("");
-                    }
-                } while (response != ConsoleKey.Y && response != ConsoleKey.N);
+                        ConsoleKey key = Console.ReadKey(false).Key;
 
-                if (response == ConsoleKey.N)
+                        if (key == ConsoleKey.Y)
+                        {
+                            break;
+                        }
+
+                        if (key == ConsoleKey.N)
+                        {
+                            response = false;
+                            break;
+                        }
+                    }
+
+                    await Task.Delay(1000);
+                    countdown--;
+                }
+
+                if (response == false)
                 {
                     await ErrorHelper.LogAndExit("You decided not to download yt-dlp, therefore the application must exit. yt-dlp is a requirement.");
                 }
-                else if (response == ConsoleKey.Y)
+                
+                if (response == true)
                 {
                     await LogHelper.Log("Download starting");
 
