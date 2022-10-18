@@ -92,8 +92,6 @@ namespace TwitchClipper.Services
 
         public async Task DownloadClips(List<TwitchClipModel> clips)
         {
-            await CreateAllDirectoriesRequired(clips);
-
             var root = Directory.GetCurrentDirectory();
             var username = clips.First().BroadcasterName;
 
@@ -112,28 +110,12 @@ namespace TwitchClipper.Services
                 if (!File.Exists(path))
                 {
                     counter++;
-                    await ProcessEx.RunAsync(await _hostService.GetDownloaderExecutablePath(), $"{clip.Url} -o \"{path}\"");
+                    await ProcessEx.RunAsync(await _hostService.GetDownloaderExecutablePath(), $"{clip.Url} --restrict-filenames --windows-filenames -o \"{path}\"");
                     await LogHelper.Log($"Downloading clip {counter}/{nonExistingClips.Count} using {await _twitchConfigurationService.GetDownloadThreads()} download threads", asyncLock);
                 }
             }, await _twitchConfigurationService.GetDownloadThreads());
 
             LogHelper.Index += 1;
-        }
-
-        private async Task CreateAllDirectoriesRequired(List<TwitchClipModel> clips)
-        {
-            await LogHelper.Log("Creating directories. This might take a while.");
-
-            foreach (var clip in clips)
-            {
-                var savePath = await _hostService.ConvertCustomPathExpressionToSavePath(clip);
-                var path = savePath.Replace(Path.GetFileName(savePath), "");
-                path = path.TrimEnd('\\').TrimEnd('/');
-
-                path = Path.Combine(Directory.GetCurrentDirectory().TrimEnd('\\').TrimEnd('/'), "clips", path.TrimStart('\\').TrimStart('/'));
-
-                await _hostService.CreateDirectoryIfNotExists(path);
-            }
         }
 
         private async Task<string> GetPath(TwitchClipModel clip)

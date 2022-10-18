@@ -98,25 +98,6 @@ namespace TwitchClipper.Services
                 await ErrorHelper.LogAndExit("Your custom path does not end with .mp4. Check https://github.com/mortenmoulder/TwitchClipper/wiki/Custom-save-expressions#requirements");
             }
 
-            var replace = path
-                .Replace("{id", "{0")
-                .Replace("{broadcaster_name", "{1")
-                .Replace("{broadcaster_id", "{2")
-                .Replace("{game_id", "{3")
-                .Replace("{title", "{4")
-                .Replace("{yyyy", "{5:yyyy").Replace("{yyy", "{5:yyy").Replace("{yy", "{5:yy").Replace("{y", "{5:%y")
-                .Replace("{MMMM", "{5:MMMM").Replace("{MMM", "{5:MMM").Replace("{MM", "{5:MM").Replace("{M", "{5:%M")
-                .Replace("{dddd", "{5:dddd").Replace("{ddd", "{5:ddd").Replace("{dd", "{5:dd").Replace("{d", "{5:%d")
-                .Replace("{HH", "{5:HH").Replace("{H", "{5:%H").Replace("{hh", "{5:hh")
-                .Replace("{mm", "{5:mm").Replace("{m", "{5:%m")
-                .Replace("{ss", "{5:ss").Replace("{s", "{5:%s")
-                .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
-                .Replace("{viewcount", "{6")
-                .Replace("{uploader", "{7")
-                ;
-
-            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt, model.ViewCount, model.CreatorName);
-
             if (await GetOSPlatform() == OSPlatform.Windows)
             {
                 illegalCharacters = new List<string>()
@@ -135,6 +116,25 @@ namespace TwitchClipper.Services
 
                 path = path.Replace(@"\", "/");
             }
+
+            var replace = path
+                .Replace("{id", "{0")
+                .Replace("{broadcaster_name", "{1")
+                .Replace("{broadcaster_id", "{2")
+                .Replace("{game_id", "{3")
+                .Replace("{title", "{4")
+                .Replace("{yyyy", "{5:yyyy").Replace("{yyy", "{5:yyy").Replace("{yy", "{5:yy").Replace("{y", "{5:%y")
+                .Replace("{MMMM", "{5:MMMM").Replace("{MMM", "{5:MMM").Replace("{MM", "{5:MM").Replace("{M", "{5:%M")
+                .Replace("{dddd", "{5:dddd").Replace("{ddd", "{5:ddd").Replace("{dd", "{5:dd").Replace("{d", "{5:%d")
+                .Replace("{HH", "{5:HH").Replace("{H", "{5:%H").Replace("{hh", "{5:hh")
+                .Replace("{mm", "{5:mm").Replace("{m", "{5:%m")
+                .Replace("{ss", "{5:ss").Replace("{s", "{5:%s")
+                .Replace("{tt", "{5:tt").Replace("{t", "{5:t")
+                .Replace("{viewcount", "{6")
+                .Replace("{uploader", "{7")
+                ;
+
+            path = string.Format(culture, replace, model.Id, model.BroadcasterName, model.BroadcasterId, model.GameId, model.Title, model.CreatedAt, model.ViewCount, model.CreatorName);
 
             foreach (var character in illegalCharacters)
             {

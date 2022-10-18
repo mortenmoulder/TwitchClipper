@@ -126,7 +126,7 @@ namespace TwitchClipper.Services
 
             LogHelper.Index += 1;
 
-            return clips;
+            return clips.Where(x => x is not null).ToList();
         }
 
         /// <summary>
